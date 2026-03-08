@@ -2,33 +2,42 @@
 #include <stdlib.h>
 #include <time.h>
 
-int checkProgress(int guess, int target);
-void checkGuess(int guess, int target, int progress);
-void makeGuess(int target);
-int get_guess(char prompt[]);
+int checkProgress(int guess, int target, int tries);
+void checkGuess(int guess, int target, int progress, int tries);
+void makeGuess(int target, int tries);
+int get_int(char prompt[]);
+int set_difficulty();
 
 int main(void)
 {
     srand(time(NULL)); 
-    const int num = rand() % 21; // gets the random number between 0 and 21-1=20
-    int guess = get_guess("Guess the number: ");
-    int progress = checkProgress(guess, num);
+
+    int tries = set_difficulty();
+
+    const int num = rand() % ((tries * 2)+1); // gets the random number between 0 and 21-1=20
+    int guess = get_int("Guess the number: ");
+    int progress = checkProgress(guess, num, tries);
    
     //printf("Guess the number: ");
     //scanf("%d", &guess);
     
-    checkGuess(guess, num, progress);
+    checkGuess(guess, num, progress, tries);
     
 
     return 0;
 }
 
-int checkProgress(int guess, int target)
+int checkProgress(int guess, int target, int tries)
 {
     // determines the progress of guess, i.e,
     // how far ahead guess deviated from actual num (+ve)
     // or how much it is lagging (-ve)
     
+    if (tries <= 1)
+    {
+        printf("Game over. The number was %d.\n", target);
+        exit(0);
+    }
     int dif = target - guess;
 
     if (dif >= 5)
@@ -41,7 +50,7 @@ int checkProgress(int guess, int target)
     }
 }
 
-void checkGuess(int guess, int target, int progress)
+void checkGuess(int guess, int target, int progress, int tries)
 {
     if (guess == target)
     {
@@ -53,26 +62,26 @@ void checkGuess(int guess, int target, int progress)
         switch (progress)
         {
             case 1:
-                printf("Guessed too low!\n");
+                printf("Guessed too low! %d tries left\n", tries-1);
                 break;
             case 2:
-                printf("You're close!\n");
+                printf("You're close! %d tries left\n", tries-1);
                 break;
             case 3:
-                printf("Guessed too high!\n");
+                printf("Guessed too high %d tries left\n", tries-1);
                 break;
         }
-        makeGuess(target);
+        makeGuess(target, tries - 1);
     }
 }
-void makeGuess(int target)
+void makeGuess(int target, int tries)
 {
-    int guess = get_guess("Guess the number: ");
-    int progress = checkProgress(guess, target);
-    checkGuess(guess, target, progress);
+    int guess = get_int("Guess the number: ");
+    int progress = checkProgress(guess, target, tries);
+    checkGuess(guess, target, progress, tries);
 }
 
-int get_guess(char prompt[])
+int get_int(char prompt[])
 {
     int t; // ret = return value of scanf  
     int ret = 0;
@@ -90,3 +99,35 @@ int get_guess(char prompt[])
 
     return t;
 }
+
+
+int set_difficulty()
+{
+    printf("Welcome to Guess the Number!\n");
+    int difficulty = 0;
+    int tries = 0;
+    while (!(difficulty >= 1 && difficulty <= 5))
+    {
+        difficulty = get_int("Difficulty (1 - 5): ");
+    }
+    switch(difficulty)
+    {
+        case 1:
+            tries = difficulty * 5;
+            break;
+        case 2:
+            tries = difficulty * 5;
+            break;
+        case 3:
+            tries = difficulty * 5;
+            break;
+        case 4:
+            tries = difficulty * 5;
+            break;
+        case 5:
+            tries = difficulty * 5;
+            break;
+    }
+    return tries;
+}
+
