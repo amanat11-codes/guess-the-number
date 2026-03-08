@@ -8,6 +8,8 @@ void makeGuess(int target, int tries);
 int get_int(char prompt[]);
 int set_difficulty();
 
+int MAX;
+char prompt[100];
 int main(void)
 {
     srand(time(NULL));
@@ -15,7 +17,10 @@ int main(void)
     int tries = set_difficulty();
 
     const int num = rand() % ((tries * 2) + 1); // gets the random number between 0 and 21-1=20
-    int guess = get_int("Guess the number: ");
+    MAX = num + 15;
+
+    sprintf(prompt, "Guess the number between 0 and %d: ", MAX);
+    int guess = get_int(prompt);
     int progress = checkProgress(guess, num, tries);
 
     checkGuess(guess, num, progress, tries);
@@ -68,7 +73,7 @@ void checkGuess(int guess, int target, int progress, int tries)
             printf("You're close! %d tries left\n", tries - 1);
             break;
         case 3:
-            printf("Guessed too high %d tries left\n", tries - 1);
+            printf("Guessed too high! %d tries left\n", tries - 1);
             break;
         }
         makeGuess(target, tries - 1);
@@ -76,7 +81,7 @@ void checkGuess(int guess, int target, int progress, int tries)
 }
 void makeGuess(int target, int tries)
 {
-    int guess = get_int("Guess the number: ");
+    int guess = get_int(prompt);
     int progress = checkProgress(guess, target, tries);
     checkGuess(guess, target, progress, tries);
 }
