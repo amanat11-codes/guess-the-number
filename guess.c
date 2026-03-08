@@ -33,11 +33,6 @@ int checkProgress(int guess, int target, int tries)
     // how far ahead guess deviated from actual num (+ve)
     // or how much it is lagging (-ve)
     
-    if (tries <= 1)
-    {
-        printf("Game over. The number was %d.\n", target);
-        exit(0);
-    }
     int dif = target - guess;
 
     if (dif >= 5)
@@ -57,7 +52,12 @@ void checkGuess(int guess, int target, int progress, int tries)
         printf ("You guessed right, well done!\n");
         return;
     }
-    if (guess != target)
+    else if (tries <= 1)
+    {
+        printf("Game over. The number was %d.\n", target);
+        exit(0);
+    }
+    else
     {
         switch (progress)
         {
@@ -110,24 +110,7 @@ int set_difficulty()
     {
         difficulty = get_int("Difficulty (1 - 5): ");
     }
-    switch(difficulty)
-    {
-        case 1:
-            tries = difficulty * 5;
-            break;
-        case 2:
-            tries = difficulty * 5;
-            break;
-        case 3:
-            tries = difficulty * 5;
-            break;
-        case 4:
-            tries = difficulty * 5;
-            break;
-        case 5:
-            tries = difficulty * 5;
-            break;
-    }
-    return tries;
+    
+    return difficulty * 5;
 }
 
